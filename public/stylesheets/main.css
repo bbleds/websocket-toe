@@ -1,0 +1,16 @@
+#game-container{
+  width: 400px;
+  position: relative;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: 100px;
+}
+#game-container button {
+  height: 100px;
+}
+.x {
+  background-color: blue;
+}
+.o {
+  background-color: rebeccapurple;
+}
