@@ -20,7 +20,18 @@ game.makeMove = (item) => {
 };
 
 game.checkWinStatus = () => {
-  if(
+  let tieCount = 0;
+
+  // check tie status
+  for(let i =0; i < 9; i++){
+    if(game[`number-${i}`].getAttribute("class")==="col-md-4 x" || game[`number-${i}`].getAttribute("class")==="col-md-4 o"){
+      tieCount +=1;
+    }
+  }
+
+  if(tieCount === 9){
+    game.annouceWinner("It's a tie");
+  } else if(
     // check x win status
       // win combination one
       game["number-0"].getAttribute("class")==="col-md-4 x" && game["number-1"].getAttribute("class")==="col-md-4 x" && game["number-2"].getAttribute("class")==="col-md-4 x" ||
@@ -39,6 +50,8 @@ game.checkWinStatus = () => {
       // win combination eight
       game["number-6"].getAttribute("class")==="col-md-4 x" && game["number-7"].getAttribute("class")==="col-md-4 x" && game["number-8"].getAttribute("class")==="col-md-4 x"
   ){
+    // clear tie count
+    // announce winner
     game.annouceWinner("x wins");
   } else if(
     // check o win status
@@ -61,6 +74,10 @@ game.checkWinStatus = () => {
   ){
     game.annouceWinner("o wins");
   }
+
+  // set tie count to 0
+  tieCount = 0;
+
 };
 
 // alerts winner and clears board
