@@ -1,5 +1,18 @@
 "use strict";
 
+// connect websockets
+const ws = io.connect();
+
+// websocket subscribers
+ws.on('connect', () => {
+    console.log('socket connected');
+  });
+
+ws.on("receivedPlayerMove", (item) => {
+   const gameItem =  game[`${item.item}`];
+   game.makeMove(gameItem, true);
+});
+
 //---------------- game object
 const game = {};
 
@@ -15,8 +28,33 @@ game.turnIs = "x";
 
 //---------------- methods
 
-game.makeMove = (item) => {
-  game.turnIs === "x" ? (item.setAttribute("class", "col-md-4 x"), item.innerHTML = "x", game.turnIs = "o", game.checkWinStatus()) : (item.setAttribute("class", "col-md-4 o"), item.innerHTML = "o", game.turnIs = "x", game.checkWinStatus());
+game.makeMove = (item, emitted) => {
+
+  if(game.turnIs === "x"){
+      item.setAttribute("class", "col-md-4 x");
+      item.innerHTML = "x";
+      game.turnIs = "o";
+      game.checkWinStatus();
+      //if event not emitted over socket, prevents double emit
+        if(emitted === false){
+          ws.emit('playerMoved',
+            { "item": item.getAttribute("id"),
+              "class": "col-md-4 x"
+            });
+        }
+  } else{
+    item.setAttribute("class", "col-md-4 o");
+    item.innerHTML = "o";
+    game.turnIs = "x";
+    game.checkWinStatus();
+    //if event not emitted over socket, prevents double emit
+    if(emitted === false){
+      ws.emit('playerMoved',
+        { "item": item.getAttribute("id"),
+          "class": "col-md-4 o"
+        });
+    }
+  }
 };
 
 game.checkWinStatus = () => {
@@ -98,7 +136,6 @@ game.annouceWinner = (winMsg) => {
 //----------------- attach event listeners to each button in game
 // get row divs
 const gameButtons = document.getElementsByClassName("row");
-
 // convert collection to array and iterate over each
 Array.from(gameButtons).map((item, index)=>{
   // convert collection to array and attach event listener
@@ -107,11 +144,11 @@ Array.from(gameButtons).map((item, index)=>{
     innerItem.addEventListener("click", () => {
       // if player has already moved in block, alert user
       if(innerItem.getAttribute("class")=== "col-md-4 o" || innerItem.getAttribute("class")=== "col-md-4 x" ){
-        alert("You Can't Move here!")
+        alert("You Can't Move here!");
       // else move on square
       } else {
         // check whose turn it is, add corresponding class, and switch turn to other player
-        game.makeMove(innerItem);
+        game.makeMove(innerItem, false);
       }
     });
   });
