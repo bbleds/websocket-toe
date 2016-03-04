@@ -1,0 +1,29 @@
+{
+  "name": "websocket-toe",
+  "version": "1.0.0",
+  "description": "a tic tack toe game with web sockets",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js",
+    "bower": "bower"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbleds/websocket-toe.git"
+  },
+  "keywords": [],
+  "author": "Benjamin Bledsoe <bledsoedesigns@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bbleds/websocket-toe/issues"
+  },
+  "homepage": "https://github.com/bbleds/websocket-toe#readme",
+  "devDependencies": {
+    "nodemon": "^1.9.1"
+  },
+  "dependencies": {
+    "bower": "^1.7.7",
+    "express": "^4.13.4"
+  }
+}
