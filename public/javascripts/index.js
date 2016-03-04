@@ -3,7 +3,7 @@
 //---------------- game object
 const game = {};
 
-// reference game blocks by number and immediately invoke (IIFE)
+// reference game blocks by number, set as keys on game object, and immediately invoke (IIFE)
 (() => {
   for(let i = 0; i < 9; i++){
     game[`number-${i}`] = document.getElementById(`number-${i}`);
@@ -39,7 +39,7 @@ game.checkWinStatus = () => {
       // win combination eight
       game["number-6"].getAttribute("class")==="col-md-4 x" && game["number-7"].getAttribute("class")==="col-md-4 x" && game["number-8"].getAttribute("class")==="col-md-4 x"
   ){
-    console.log("x wins");
+    game.annouceWinner("x wins");
   } else if(
     // check o win status
       // win combination one
@@ -59,8 +59,22 @@ game.checkWinStatus = () => {
       // win combination eight
       game["number-6"].getAttribute("class")==="col-md-4 o" && game["number-7"].getAttribute("class")==="col-md-4 o" && game["number-8"].getAttribute("class")==="col-md-4 o"
   ){
-    console.log("o wins");
+    game.annouceWinner("o wins");
   }
+};
+
+// alerts winner and clears board
+game.annouceWinner = (winMsg) => {
+  // alert message message
+  alert(winMsg);
+
+  // clear board
+    //loop through game squares, clear x and o content, and remove x and o classes
+    for(let i =0; i < 9; i++){
+      game[`number-${i}`].innerHTML = "";
+      game[`number-${i}`].setAttribute("class", "col-md-4");
+    }
+
 };
 
 
@@ -74,8 +88,14 @@ Array.from(gameButtons).map((item, index)=>{
   Array.from(item.getElementsByTagName("button")).map((innerItem, innerIndex) => {
     // this will be one of the nine buttons, attach event listener to each
     innerItem.addEventListener("click", () => {
-      // check whose turn it is, add corresponding class, and switch turn to other player
-      game.makeMove(innerItem);
+      // if player has already moved in block, alert user
+      if(innerItem.getAttribute("class")=== "col-md-4 o" || innerItem.getAttribute("class")=== "col-md-4 x" ){
+        alert("You Can't Move here!")
+      // else move on square
+      } else {
+        // check whose turn it is, add corresponding class, and switch turn to other player
+        game.makeMove(innerItem);
+      }
     });
   });
 });
